@@ -1,7 +1,8 @@
 import express from "express";
 import cors from "cors";
-import { connectToDB, createTable } from "./controller.js";
 import {
+  connectToDB,
+  createTable,
   insertData,
   insertUser,
   deleteUser,
