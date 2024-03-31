@@ -43,6 +43,9 @@ const insertUser = async (req, res) => {
   try {
     const { name, email, password, dob } = req.body;
     // const hashedPassword = await bcrypt.hash(password, 10);
+    if (!name || !email || !password || !dob) {
+      return res.status(400).json({ message: "Please provide all fields" });
+    }
     const [result] = await pool.query(
       `INSERT INTO user (name, email, password, dob) VALUES (?,?,?,?)`,
       [name, email, password, dob]
@@ -70,7 +73,10 @@ const fetchUsers = async (req, res) => {
 
 const deleteUser = async (req, res, next) => {
   try {
-    const id = req.params.id;
+    const id = req.params?.id;
+    if (!id) {
+      return res.status(400).json({ message: "Please provide user id" });
+    }
 
     await pool.query("DELETE FROM USER WHERE id = ?", [parseInt(id, 10)]);
     // console.log(result);
@@ -84,9 +90,14 @@ const deleteUser = async (req, res, next) => {
 
 const updateUser = async (req, res, next) => {
   try {
-    const id = req.params.id;
+    const id = req.params?.id;
+    if (!id) {
+      return res.status(400).json({ message: "Please provide user id" });
+    }
     const { dob, email, name } = req.body;
-
+    if (!name || !email || !dob) {
+      return res.status(400).json({ message: "Please provide all fields" });
+    }
     await pool.query(
       "UPDATE USER SET name = ?, email = ?, dob = ? WHERE id = ?",
       [name, email, dob, id]
